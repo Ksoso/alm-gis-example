@@ -5,7 +5,8 @@ export const DEFAULT_VALUE = 'default';
 export const FieldType = {
     TEXT: "text",
     TEXT_AREA: "textArea",
-    NUMBER: "number"
+    NUMBER: "number",
+    SELECT: "select",
 };
 
 export const objectConfig = {
@@ -39,6 +40,37 @@ export const objectConfig = {
                 type: FieldType.TEXT,
                 required: true,
                 label: 'Nazwa'
+            },
+            category: {
+                type: FieldType.SELECT,
+                required: true,
+                label: 'Kategoria',
+                selectValues: [
+                    {
+                        value: 'autostrada',
+                        label: 'Autostrada',
+                    },
+                    {
+                        value: 'ekspresowa',
+                        label: 'Ekspresowa',
+                    },
+                    {
+                        value: 'główna',
+                        label: 'Główna',
+                    },
+                    {
+                        value: 'zbiorcza',
+                        label: 'Zbiorcza',
+                    },
+                    {
+                        value: 'lokalna',
+                        label: 'Lokalna',
+                    },
+                    {
+                        value: 'dojazdowa',
+                        label: 'Dojazdowa',
+                    },
+                ]
             },
             description: {
                 type: FieldType.TEXT_AREA,

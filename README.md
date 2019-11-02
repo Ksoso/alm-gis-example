@@ -92,7 +92,7 @@ Nie musi to być istniejący adres.
 6. Zatwierdzamy klikając w przycisk `Wyślij`.
 7. Jeśli się uda, otrzymamy taki wynik: <br />
 
-![tworzenie workspace tabela](docs/workspace_3.png)
+    ![tworzenie workspace tabela](docs/workspace_3.png)
 
 ### Połączenie Geoservera z bazą danych PostGIS
 
@@ -118,7 +118,7 @@ W celu połączenie bazy danych PostgreSQL z rozszerzeniem PostGIS z Geoserverem
 7. Zatwierdzamy przez przycisk `Save`.
 8. Jeśli wszystko zakończy się powodzeniem otrzymamy taki widok, gdzie `LayerName` jest równoznaczny z nazwą tabeli.
 
-![db layerrs](docs/store_5.png)
+   ![db layerrs](docs/store_5.png)
 
 ### Publikacja zasobów
 
@@ -152,39 +152,15 @@ jako wybrany styl, ponieważ nasza tabela zawiera wielokąty.
 
     ![db publikacja_granice](docs/layers_6.png) 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Podgląd warstwy
 
-## Available Scripts
+W celu podglądu warstwy i przy okazji weryfikacji czy działa poprawnie należy podjąć następujące kroki:
+1. Wybrać z menu `Podgląd warstw`.
+2. Znaleźć w tabeli interesującą nas warstwę i kliknąć przycisk `OpenLayers` w kolumnie `Typowe formaty`.
 
-In the project directory, you can run:
+### Zmiana wyglądu udostępnianych danych
 
-### `npm start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Wygląd utworzonych warstwy w aplikacji Geoserver zmienia się przy użyciu plików 
+[Styled Layer Descriptor (SLD)](https://docs.geoserver.org/stable/en/user/styling/sld/reference/index.html#sld-reference).
+Plik SLD, jest plikiem XML, a przykładowe jego definicje dla różnych typów geometrii można znaleźć 
+[tutaj](https://docs.geoserver.org/stable/en/user/styling/sld/cookbook/index.html).

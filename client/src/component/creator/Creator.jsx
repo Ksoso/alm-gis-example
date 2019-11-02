@@ -45,7 +45,7 @@ const drawingLayer = new VectorLayer({
 const wktFormat = new WKT();
 let drawEndListenerKey;
 
-export function GeometryWizard({map}) {
+export function Creator({map}) {
     const classes = useStyles();
     const [formValues, setFormValues] = useState({'type': DEFAULT_VALUE});
 
@@ -139,7 +139,9 @@ export function GeometryWizard({map}) {
         let isValid = Boolean(geometry);
         if (objectTypeDef && DEFAULT_VALUE !== objectTypeDef.id) {
             fields = Object.entries(objectTypeDef.fields).map(([key, value]) => {
-                isValid = isValid && value.required && Boolean(formValues[key]);
+                if (value.required) {
+                    isValid = isValid && Boolean(formValues[key]);
+                }
                 return <FormField key={key} value={formValues[key]} fieldDef={value} fieldId={key}
                                   onValueChange={handleFormValueChange}/>
             });
@@ -181,6 +183,6 @@ export function GeometryWizard({map}) {
     )
 }
 
-GeometryWizard.propTypes = {
+Creator.propTypes = {
     map: PropTypes.object.isRequired
 };

@@ -38,8 +38,8 @@ const getBuildings = (request, response, next) => {
 const createBuilding = async (request, response, next) => {
     const {name, description, geometry} = request.body;
     const query = `INSERT INTO building(name, description, geom)
-                                            VALUES ($1, $2, st_transform(ST_GeomFromText($3, 3857), 2180))
-                                            RETURNING id`;
+                   VALUES ($1, $2, ST_GeomFromText($3, 2180))
+                          RETURNING id`;
     try {
         await tx(async client => {
             const res = await client.query(query, [name, description, geometry]);
@@ -51,13 +51,13 @@ const createBuilding = async (request, response, next) => {
 };
 
 const createRoad = async (request, response, next) => {
-    const {name, description, length, geometry} = request.body;
-    const query = `INSERT INTO road(name, description, length, geom)
-                                            VALUES ($1, $2, $3, st_transform(ST_GeomFromText($4, 3857), 2180))
+    const {name, description, category, length, geometry} = request.body;
+    const query = `INSERT INTO road(name, description, category, length, geom)
+                   VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 3857))
                                             RETURNING id`;
     try {
         await tx(async client => {
-            const res = await client.query(query, [name, description, parseFloat(length), geometry]);
+            const res = await client.query(query, [name, description, category, parseFloat(length), geometry]);
             response.status(201).json({id: res.rows[0].id});
         });
     } catch (e) {
@@ -68,8 +68,8 @@ const createRoad = async (request, response, next) => {
 const createPoi = async (request, response, next) => {
     const {name, description, geometry} = request.body;
     const query = `INSERT INTO poi(name, description, geom)
-                                            VALUES ($1, $2, st_transform(ST_GeomFromText($3, 3857), 2180))
-                                            RETURNING id`;
+                   VALUES ($1, $2, ST_GeomFromText($3, 3857))
+                          RETURNING id`;
     try {
         await tx(async client => {
             const res = await client.query(query, [name, description, geometry]);
