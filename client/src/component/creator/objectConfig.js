@@ -55,7 +55,7 @@ export const objectConfig = {
                         label: 'Ekspresowa',
                     },
                     {
-                        value: 'główna',
+                        value: 'glowna',
                         label: 'Główna',
                     },
                     {

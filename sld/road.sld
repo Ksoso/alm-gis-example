@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <StyledLayerDescriptor version="1.0.0"
                        xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd"
                        xmlns="http://www.opengis.net/sld"
@@ -10,39 +10,148 @@
             <Title>Style for roads</Title>
             <FeatureTypeStyle>
                 <Rule>
-                    <PolygonSymbolizer>
-                        <Fill>
-                            <CssParameter name="fill">#40FF40</CssParameter>
-                        </Fill>
+                    <Name>autostrada</Name>
+                    <Title>Autostrada</Title>
+                    <ogc:Filter>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>category</ogc:PropertyName>
+                            <ogc:Literal>autostrada</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                    </ogc:Filter>
+                    <LineSymbolizer>
                         <Stroke>
-                            <CssParameter name="stroke">#FFFFFF</CssParameter>
-                            <CssParameter name="stroke-width">2</CssParameter>
+                            <GraphicStroke>
+                                <Graphic>
+                                    <Mark>
+                                        <WellKnownName>wkt://MULTILINESTRING((-0.25 -0.25, -0.125 -0.25), (0.125 -0.25,
+                                            0.25 -0.25), (-0.25 0.25, -0.125 0.25), (0.125 0.25, 0.25 0.25))
+                                        </WellKnownName>
+                                        <Fill>
+                                            <CssParameter name="fill">#0000ff</CssParameter>
+                                        </Fill>
+                                        <Stroke>
+                                            <CssParameter name="stroke">#0000ff</CssParameter>
+                                            <CssParameter name="stroke-width">1</CssParameter>
+                                        </Stroke>
+                                    </Mark>
+                                    <Size>6</Size>
+                                </Graphic>
+                            </GraphicStroke>
                         </Stroke>
-                    </PolygonSymbolizer>
-                    <TextSymbolizer>
-                        <Label>
-                            <ogc:PropertyName>name</ogc:PropertyName>
-                        </Label>
-                        <Font>
-                            <CssParameter name="font-family">Arial</CssParameter>
-                            <CssParameter name="font-size">11</CssParameter>
-                            <CssParameter name="font-style">normal</CssParameter>
-                            <CssParameter name="font-weight">bold</CssParameter>
-                        </Font>
-                        <LabelPlacement>
-                            <PointPlacement>
-                                <AnchorPoint>
-                                    <AnchorPointX>0.5</AnchorPointX>
-                                    <AnchorPointY>0.5</AnchorPointY>
-                                </AnchorPoint>
-                            </PointPlacement>
-                        </LabelPlacement>
-                        <Fill>
-                            <CssParameter name="fill">#000000</CssParameter>
-                        </Fill>
-                        <VendorOption name="autoWrap">60</VendorOption>
-                        <VendorOption name="maxDisplacement">150</VendorOption>
-                    </TextSymbolizer>
+                    </LineSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>ekspresowa</Name>
+                    <Title>Ekspresowa</Title>
+                    <ogc:Filter>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>category</ogc:PropertyName>
+                            <ogc:Literal>ekspresowa</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                    </ogc:Filter>
+                    <LineSymbolizer>
+                        <Stroke>
+                            <CssParameter name="stroke">#0000FF</CssParameter>
+                            <CssParameter name="stroke-width">1</CssParameter>
+                            <CssParameter name="stroke-dasharray">10 10</CssParameter>
+                        </Stroke>
+                    </LineSymbolizer>
+                    <LineSymbolizer>
+                        <Stroke>
+                            <GraphicStroke>
+                                <Graphic>
+                                    <Mark>
+                                        <WellKnownName>circle</WellKnownName>
+                                        <Stroke>
+                                            <CssParameter name="stroke">#000033</CssParameter>
+                                            <CssParameter name="stroke-width">1</CssParameter>
+                                        </Stroke>
+                                    </Mark>
+                                    <Size>5</Size>
+                                </Graphic>
+                            </GraphicStroke>
+                            <CssParameter name="stroke-dasharray">5 15</CssParameter>
+                            <CssParameter name="stroke-dashoffset">7.5</CssParameter>
+                        </Stroke>
+                    </LineSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>glowna</Name>
+                    <Title>Glowna</Title>
+                    <ogc:Filter>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>category</ogc:PropertyName>
+                            <ogc:Literal>glowna</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                    </ogc:Filter>
+                    <LineSymbolizer>
+                        <Stroke>
+                            <GraphicStroke>
+                                <Graphic>
+                                    <Mark>
+                                        <WellKnownName>circle</WellKnownName>
+                                        <Fill>
+                                            <CssParameter name="fill">#666666</CssParameter>
+                                        </Fill>
+                                        <Stroke>
+                                            <CssParameter name="stroke">#333333</CssParameter>
+                                            <CssParameter name="stroke-width">1</CssParameter>
+                                        </Stroke>
+                                    </Mark>
+                                    <Size>4</Size>
+                                </Graphic>
+                            </GraphicStroke>
+                            <CssParameter name="stroke-dasharray">4 6</CssParameter>
+                        </Stroke>
+                    </LineSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>zbiorcza</Name>
+                    <Title>Zbiorcza</Title>
+                    <ogc:Filter>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>category</ogc:PropertyName>
+                            <ogc:Literal>zbiorcza</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                    </ogc:Filter>
+                    <LineSymbolizer>
+                        <Stroke>
+                            <CssParameter name="stroke">#0000FF</CssParameter>
+                            <CssParameter name="stroke-width">3</CssParameter>
+                            <CssParameter name="stroke-dasharray">5 2</CssParameter>
+                        </Stroke>
+                    </LineSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>lokalna</Name>
+                    <Title>Lokalna</Title>
+                    <ogc:Filter>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>category</ogc:PropertyName>
+                            <ogc:Literal>lokalna</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                    </ogc:Filter>
+                    <LineSymbolizer>
+                        <Stroke>
+                            <CssParameter name="stroke">#000000</CssParameter>
+                            <CssParameter name="stroke-width">3</CssParameter>
+                        </Stroke>
+                    </LineSymbolizer>
+                </Rule>
+                <Rule>
+                    <Name>dojazdowa</Name>
+                    <Title>Dojazdowa</Title>
+                    <ogc:Filter>
+                        <ogc:PropertyIsEqualTo>
+                            <ogc:PropertyName>category</ogc:PropertyName>
+                            <ogc:Literal>dojazdowa</ogc:Literal>
+                        </ogc:PropertyIsEqualTo>
+                    </ogc:Filter>
+                    <LineSymbolizer>
+                        <Stroke>
+                            <CssParameter name="stroke">#FF0000</CssParameter>
+                        </Stroke>
+                    </LineSymbolizer>
                 </Rule>
             </FeatureTypeStyle>
         </UserStyle>

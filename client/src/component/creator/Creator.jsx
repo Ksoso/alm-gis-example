@@ -123,6 +123,12 @@ export function Creator({map}) {
                 open: true,
                 msg: `Zapis obiektu zakończył się powodzeniem, Id obiektu: ${content.id}`
             });
+
+            const layerToUpdate = map.getLayers().getArray().find(l => l.get('type') === formValues['type']);
+            if (layerToUpdate) {
+                layerToUpdate.getSource().updateParams({'REVISION': new Date().toISOString()});
+            }
+
             clearForm();
         } catch (e) {
             console.error(e);

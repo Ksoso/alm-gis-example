@@ -26,7 +26,7 @@ create table road
     id          SERIAL primary key,
     name        varchar(256)                           not null,
     description varchar(1024),
-    category    text check (category in ('autostrada', 'ekspresowa', 'główna', 'zbiorcza', 'lokalna',
+    category    text check (category in ('highway', 'ekspresowa', 'glowna', 'zbiorcza', 'lokalna',
                                          'dojazdowa')) not null,
     length      NUMERIC(6, 2) default 0.0,
     geom        geometry(LineString, 2180)             not null
@@ -42,10 +42,6 @@ comment on column road.geom is 'Linia reprezentująca droge w przestrzeni';
 -- Dodajemy indeks przestrzenny dla kolumny geom
 create index road_geom_idx on road using gist (geom);
 comment on index road_geom_idx is 'Indeks przestrzenny kolumny geom tabeli road';
-
--- dodajemy uprawnienia dla naszego użytkownika
-grant all privileges on road to polsl;
-
 
 -- tworzymy tabele dla przechowywania punktów zainteresowania
 create table poi
