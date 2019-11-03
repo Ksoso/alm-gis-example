@@ -1,34 +1,31 @@
-## Available Scripts
+##Przygotowanie do uruchomienia
 
-In the project directory, you can run:
+W głównym katalogu czyli `{nazwa_aplikacji}/client/` należy uruchomić z linii poleceń komendę:
+
+### `npm install`
+
+gdzie `nazwa_aplikacji` jest to nazwa folderu głównego, gdzie zostały pobrane źródła z GIT'a.
+
+## Dostępne skrypty
+
+W katalogu projektu, możesz uruchomić:
 
 ### `npm start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Uruchamia aplikacje w trybie deweloperskim.<br />
+Otwórz [http://localhost:3000](http://localhost:3000), aby zobaczyć w domyślnej przeglądarce internetowej.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Strona zostanie przeładowana, jeśli dokonasz edycji.<br />
+Zobaczysz również wszelkie błędy składniowe w konsoli przeglądarki.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Uruchamia testy w trybie interaktywnym.<br />
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Buduje aplikację na produkcje do folderu `build` <br />
+Prawidłowo łączy React w trybie produkcyjnym i optymalizuje kod w celu uzyskania najlepszej wydajności.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Zbudowana paczka jest zminimalizowana, a nazwy plików zawierają skróty.<br />
+Twoja aplikacja jest gotowa do wdrożenia!

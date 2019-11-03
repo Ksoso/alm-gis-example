@@ -11,6 +11,8 @@ import WKT from "ol/format/WKT";
 import {unByKey} from "ol/Observable";
 import {DEFAULT_VALUE, objectConfig} from "./objectConfig";
 import {FormField} from "./FormField";
+import {NotificationContentWrapper} from "../NotificationWrapper";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -48,6 +50,7 @@ let drawEndListenerKey;
 export function Creator({map}) {
     const classes = useStyles();
     const [formValues, setFormValues] = useState({'type': DEFAULT_VALUE});
+    const [notification, setNotification] = useState({open: false, variant: 'success', msg: ''});
 
     useEffect(() => {
         map.addLayer(drawingLayer);
@@ -95,6 +98,7 @@ export function Creator({map}) {
             } else {
                 setInteraction(null);
             }
+            setGeometry(null);
             setFormValues({type: newType});
         }
     };
@@ -114,10 +118,19 @@ export function Creator({map}) {
                 body: JSON.stringify({...formValues, geometry})
             });
             const content = await response.json();
-            console.log('resp', content);
+            setNotification({
+                variant: 'success',
+                open: true,
+                msg: `Zapis obiektu zakończył się powodzeniem, Id obiektu: ${content.id}`
+            });
             clearForm();
         } catch (e) {
             console.error(e);
+            setNotification({
+                variant: 'error',
+                open: true,
+                msg: `Zapis obiektu zakończył się niepowodzeniem: ${e.message}`
+            });
             clearForm();
         }
     };
@@ -176,9 +189,33 @@ export function Creator({map}) {
         </form>
     };
 
+    const handleNotificationClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setNotification({...notification, open: false});
+    };
+
     return (
         <div className={classes.root}>
             <Paper>{renderWizard()}</Paper>
+
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                open={notification.open}
+                autoHideDuration={6000}
+                onClose={handleNotificationClose}
+            >
+                <NotificationContentWrapper
+                    onClose={handleNotificationClose}
+                    variant={notification.variant}
+                    message={notification.msg}
+                />
+            </Snackbar>
         </div>
     )
 }

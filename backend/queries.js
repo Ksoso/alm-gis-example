@@ -66,13 +66,13 @@ const createRoad = async (request, response, next) => {
 };
 
 const createPoi = async (request, response, next) => {
-    const {name, description, geometry} = request.body;
-    const query = `INSERT INTO poi(name, description, geom)
-                   VALUES ($1, $2, ST_GeomFromText($3, 3857))
+    const {name, description, category, geometry} = request.body;
+    const query = `INSERT INTO poi(name, description, category, geom)
+                   VALUES ($1, $2, $3, ST_GeomFromText($4, 3857))
                           RETURNING id`;
     try {
         await tx(async client => {
-            const res = await client.query(query, [name, description, geometry]);
+            const res = await client.query(query, [name, description, category, geometry]);
             response.status(201).json({id: res.rows[0].id});
         });
     } catch (e) {

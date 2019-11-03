@@ -1,11 +1,3 @@
---Tworzymy użytkownika na potrzeby części serwerowej aplikacji 
-create role polsl with login password 'polsl_gis';
-alter role polsl CREATEDB;
-
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO polsl;
-
---Tworzymy bazę danych
-create database polsl;
 --Dodajemy rozszerzenie PostGIS zawierające typy danych przestrzennych
 --oraz funkcje na nich operujące
 create extension postgis;
@@ -28,19 +20,16 @@ comment on column building.geom is 'Wielokąt reprezentujący powierzchnie oraz 
 create index building_geom_idx on building using gist (geom);
 comment on index building_geom_idx is 'Indeks przestrzenny kolumny geom tabeli building';
 
--- dodajemy uprawnienia dla naszego użytkownika
-grant all privileges on building to polsl;
-
 -- tworzymy tabele dla przechowywania geometrii dróg
 create table road
 (
     id          SERIAL primary key,
-    name        varchar(256)                                                                                        not null,
+    name        varchar(256)                           not null,
     description varchar(1024),
     category    text check (category in ('autostrada', 'ekspresowa', 'główna', 'zbiorcza', 'lokalna',
-                                         'dojazdowa'))                                                              not null,
+                                         'dojazdowa')) not null,
     length      NUMERIC(6, 2) default 0.0,
-    geom        geometry(LineString, 2180)                                                                          not null
+    geom        geometry(LineString, 2180)             not null
 );
 
 comment on column road.id is 'Unikalny identyfikator drogi, automatycznie inkrementowany';
@@ -58,3 +47,23 @@ comment on index road_geom_idx is 'Indeks przestrzenny kolumny geom tabeli road'
 grant all privileges on road to polsl;
 
 
+-- tworzymy tabele dla przechowywania punktów zainteresowania
+create table poi
+(
+    id          SERIAL primary key,
+    name        varchar(256)                        not null,
+    description varchar(1024),
+    category    text check (category in ('hotel', 'zamek', 'pomnik', 'szpital', 'restauracja',
+                                         'muzeum')) not null,
+    geom        geometry(Point, 2180)               not null
+);
+
+comment on column poi.id is 'Unikalny identyfikator punktu zainteresowania, automatycznie inkrementowany';
+comment on column poi.name is 'Nazwa punktu zainteresowania';
+comment on column poi.description is 'Opis punktu zainteresowania';
+comment on column poi.category is 'Określa typ punktu zainteresowania';
+comment on column poi.geom is 'Punkt reprezentująca punkt zainteresowania w przestrzeni';
+
+-- Dodajemy indeks przestrzenny dla kolumny geom
+create index poi_geom_idx on poi using gist (geom);
+comment on index poi_geom_idx is 'Indeks przestrzenny kolumny geom tabeli poi';

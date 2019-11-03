@@ -98,7 +98,38 @@ export const objectConfig = {
                 type: FieldType.TEXT_AREA,
                 required: true,
                 label: 'Opis'
-            }
+            },
+            category: {
+                type: FieldType.SELECT,
+                required: true,
+                label: 'Kategoria',
+                selectValues: [
+                    {
+                        value: 'hotel',
+                        label: 'Hotel',
+                    },
+                    {
+                        value: 'zamek',
+                        label: 'Zamek',
+                    },
+                    {
+                        value: 'pomnik',
+                        label: 'Pomnik',
+                    },
+                    {
+                        value: 'szpital',
+                        label: 'Szpital',
+                    },
+                    {
+                        value: 'restauracja',
+                        label: 'Restauracja',
+                    },
+                    {
+                        value: 'muzeum',
+                        label: 'Muzeum',
+                    },
+                ]
+            },
         },
     }
 };

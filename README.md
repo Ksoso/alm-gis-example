@@ -24,6 +24,42 @@ z domyślnymi parametrami.
 
 ![StackBuilder spatial](docs/stackbuilder_spatial.PNG)
 
+### Import schematu do bazy danych
+
+Uruchamiamy aplikacje `pgAdmin4`, która została zainstalowana z PostgreSQL (zostanie ona uruchomiona w przeglądarce internetowej).
+Po lewej stronie znajdziemy drzewo o nazwie `Servers`, po jego rozwinięciu nasza lokalna baza powinna być dostępna pod nazwą `PostgreSQL 12`.
+Klikamy na nią prawym przyciskiem myszy i wybieramy `Connect Server` lub klikamy dwukrotnie prawy przycisk myszy w celu połączenia z bazą danych.
+Zostaniemy poproszeni o hasło dla użytkownika `postgres`, jakie podaliśmy podczas instalacji. Warto zaznaczyć, aby aplikacja zapamiętała nasza hasło.
+
+![create_db_1](docs/db_import_1.png)
+
+#### Tworzenie bazy danych
+
+Wybieramy kolejno `Databases` => `Create` => `Database...`
+ 
+ ![create_db_2](docs/db_import_2.png)
+ 
+Uzupełniamy pole `Database` w oknie dialogowym i klikamy `Save`.
+
+ ![create_db_3](docs/db_import_3.png)
+
+#### Uruchamianie niezbędnych skryptów SQL
+
+ ![create_db_4](docs/db_import_4.png)
+
+Rozwijamy drzewo `Databases` i klikamy w bazę danych utworzoną w poprzednim kroku. Z górnego menu paska narzędzi wybieramy 
+`Object (1)` => `CREATE Script (2)`. Do edytora SQL (3) wklejamy zawartość pliku `sql/init.sql` i klikamy przycisk `Execute/Refresh (F5) (4)`.
+
+Po uruchomieniu skryptu powinniśmy otrzymać notyfikację, że operacja zakończyła się sukcesem. W celu upewnienia się, że wszystko
+jest jak należy. Klikamy prawym przyciskiem na naszej bazie danych i wybieramy `Refresh`. Rozwijamy drzewo jak na poniższym zrzucie ekranu:
+
+ ![create_db_4](docs/db_import_5.png)
+
+##### Nowy użytkownik
+ 
+Dodatkowo jeśli zależy nam, aby nasza aplikacja nie łączyła się z bazą danych na koncie administratorskim, należy w taki sam sposób
+uruchomić skrypt `sql/user.sql`, który doda nowego użytkownika do bazy danych o nazwie `polsl` i haśle `posl-gis`. 
+
 ## Geoserver
 Najpierw upewniamy się, że mamy zainstalowane środowisko uruchomieniowe języka Java (JRE lub JDK), możemy je pobrać np: z 
 [Oracle JDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html). Geoserver działa poprawnie począwszy od Java 8 przez 11. 
@@ -122,6 +158,26 @@ W celu połączenie bazy danych PostgreSQL z rozszerzeniem PostGIS z Geoserverem
 
 ### Publikacja zasobów
 
+#### Style SLD
+
+Publikacje zasobów rozpoczniemy od zdefiniowania wyglądu wizualnego danych z tabeli `building` jak i `road` przez 
+użycie plików [Styled Layer Descriptor (SLD)](https://docs.geoserver.org/stable/en/user/styling/sld/reference/index.html#sld-reference).
+Plik SLD, jest plikiem XML, a przykładowe jego definicje dla różnych typów geometrii można znaleźć [tutaj](https://docs.geoserver.org/stable/en/user/styling/sld/cookbook/index.html)  
+
+![db publikacja](docs/style_1.png)
+
+1. Wybieramy `Style` z menu.
+2. Następnie używamy przycisku `Dodaj nowy styl`.
+3. Wpisujemy `Nazwa` building i wybieramy wcześniej utworzony obszar roboczy.
+4. Klikamy `Wybierz plik` pod `Upload a style file` i wgrywamy plik `sld/building.sld`.
+5. Klikamy załaduj, jeśli zobaczymy zawartość w edytorze tekstu to używamy przycisku `Wyślij`.
+
+    ![db publikacja](docs/style_2.png)
+    
+6. Powyższe czynności powtarzamy dla pliku `sld/road.sld` i ustawiamy wartość `Nazwa` jako road.    
+
+#### Publikacja zawartości bazy danych
+
 W celu publikacji zawartości bazy danych należy wystawić warstwę:
 
 ![db publikacja](docs/layers_1.png)
@@ -134,7 +190,7 @@ W celu publikacji zawartości bazy danych należy wystawić warstwę:
     ![db publikacja_data_store](docs/layers_2.png)
     
 5. Formularz `Edit Layer` zawiera podstawowe informacje o naszym publikowanyn zasobie. Uzupełniamy tak jak na przykładzie, najważniejsze 
-jest pole `Nazwa`, ponieważ będzie je później traktować jako identyfikator. Pola `Tytuł` oraz `Abstract` są dowolne:
+jest pole `Nazwa`, ponieważ będziemy ją później traktować jako identyfikator. Pola `Tytuł` oraz `Abstract` są dowolne:
 
     ![db publikacja_edit_layer](docs/layers_3.png)
 
@@ -143,7 +199,7 @@ jest pole `Nazwa`, ponieważ będzie je później traktować jako identyfikator.
     
     ![db publikacja_granice](docs/layers_4.png) 
     
-7. Wracamy na górę strony i klikamy w zakładkę `Publishing` i przewijamy do formularza `WMS Settings` i wybieramy`polygon`
+7. Wracamy na górę strony i klikamy w zakładkę `Publishing` i przewijamy do formularza `WMS Settings` i wybieramy`polsl:building`
 jako wybrany styl, ponieważ nasza tabela zawiera wielokąty.
 
     ![db publikacja_granice](docs/layers_5.png)
@@ -152,15 +208,20 @@ jako wybrany styl, ponieważ nasza tabela zawiera wielokąty.
 
     ![db publikacja_granice](docs/layers_6.png) 
 
+9. Powyższe kroki powtarzamy dla zasobu tabeli `road`. Zmieniami tylko zawartość pola `Nazwa` na `road` oraz w zakładce `Publishing` 
+w formularzy `WMS Settings` wybieramy opcję `polsl:road`. 
+
 ### Podgląd warstwy
 
 W celu podglądu warstwy i przy okazji weryfikacji czy działa poprawnie należy podjąć następujące kroki:
 1. Wybrać z menu `Podgląd warstw`.
 2. Znaleźć w tabeli interesującą nas warstwę i kliknąć przycisk `OpenLayers` w kolumnie `Typowe formaty`.
 
-### Zmiana wyglądu udostępnianych danych
+## Aplikacja kliencka oraz serwerowa
 
-Wygląd utworzonych warstwy w aplikacji Geoserver zmienia się przy użyciu plików 
-[Styled Layer Descriptor (SLD)](https://docs.geoserver.org/stable/en/user/styling/sld/reference/index.html#sld-reference).
-Plik SLD, jest plikiem XML, a przykładowe jego definicje dla różnych typów geometrii można znaleźć 
-[tutaj](https://docs.geoserver.org/stable/en/user/styling/sld/cookbook/index.html).
+Cześć kliencka (aplikacja webowa) oraz serwerowa wymagają do uruchomienia `node.js`, które należy pobrać i zainstalować
+ze strony [https://nodejs.org/en/](https://nodejs.org/en/). Wybieramy wersję z dopiskiem LTS i instalujemy z domyślnymi
+ustawieniami.
+
+Szczegóły uruchamiania aplikacji klienckiej znajdują się w pliku `client/README.md`.
+Szczegóły uruchamiania aplikacji serwerowej znajdują się w pliku `backend/README.md`.

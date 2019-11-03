@@ -5,9 +5,9 @@
                        xmlns:ogc="http://www.opengis.net/ogc"
                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <NamedLayer>
-        <Name>Polygon with styled label</Name>
+        <Name>Road</Name>
         <UserStyle>
-            <Title>SLD Cook Book: Polygon with styled label</Title>
+            <Title>Style for roads</Title>
             <FeatureTypeStyle>
                 <Rule>
                     <PolygonSymbolizer>
