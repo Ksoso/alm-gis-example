@@ -1,10 +1,14 @@
-##Przygotowanie do uruchomienia
+## Przygotowanie do uruchomienia
 
 W głównym katalogu czyli `{nazwa_aplikacji}/client/` należy uruchomić z linii poleceń komendę:
 
 ### `npm install`
 
-gdzie `nazwa_aplikacji` jest to nazwa folderu głównego, gdzie zostały pobrane źródła z GIT'a.
+gdzie `nazwa_aplikacji` jest to nazwa folderu głównego, gdzie zostały pobrane źródła z GIT'a. <br />
+
+W celu uruchomienia aplikacji wykonywujemy z linii poleceń:
+
+### `npm start`
 
 ## Dostępne skrypty
 

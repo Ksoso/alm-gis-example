@@ -86,6 +86,16 @@ lub `shutdown.sh`.
 Jeśli inicjalizacja aplikacji Geoserver zakończy się sukcesem to w dowolnej przeglądarce internetowej wchodzimy w 
 [http://localhost:8080/geoserver](http://localhost:8080/geoserver) i logujemy się domyślnym użytkownikiem `admin` i hasłem `geoserver`.
 
+### Usuwanie danych demonstracyjnych
+
+Geoserver posiada od razu skonfigurowane dane oraz serwisy demonstracyjne. W celu ich usunięcia należy usunąć zawartość
+następujących katalogów:<br />
+1. `data_dir/workspaces/`
+2. `data_dir/layerGroups/`
+3. `data_dir/data/`
+
+**Powyższą czynność najlepiej wykonać przed pierwszym uruchomieniem, aby nie usunąć własnych ustawień**
+
 ## Instalacja PostgreSQL i PostGIS Docker
 
 Pobieramy obraz PostgreSQL z PostGIS <br />
@@ -112,7 +122,7 @@ panel administracyjny. Logujemy się standardowo na użytkownika `admin` o haśl
 ### Przestrzeń robocza
 
 Pracę z Geoserverem warto zacząć od stworzenia przestrzeni roboczej (Workspace), do której będziemy przypisywać wszystkie 
-przez nas wystawaiane operacje.
+przez nas wystawiane operacje.
 
 ![tworzenie workspace etap 1](docs/workspace_1.png)
 
@@ -126,7 +136,7 @@ przez nas wystawaiane operacje.
 Nie musi to być istniejący adres.
 5. Opcjonalnie można zaznaczyć opcje `Default Workspace`, aby nasz obszar roboczy stał się domyślny.
 6. Zatwierdzamy klikając w przycisk `Wyślij`.
-7. Jeśli się uda, otrzymamy taki wynik: <br />
+7. Jeśli się uda, otrzymamy taki wynik:
 
     ![tworzenie workspace tabela](docs/workspace_3.png)
 
@@ -168,13 +178,13 @@ Plik SLD, jest plikiem XML, a przykładowe jego definicje dla różnych typów g
 
 1. Wybieramy `Style` z menu.
 2. Następnie używamy przycisku `Dodaj nowy styl`.
-3. Wpisujemy `Nazwa` building i wybieramy wcześniej utworzony obszar roboczy.
+3. Wpisujemy `Nazwa` **building** i wybieramy wcześniej utworzony obszar roboczy.
 4. Klikamy `Wybierz plik` pod `Upload a style file` i wgrywamy plik `sld/building.sld`.
-5. Klikamy załaduj, jeśli zobaczymy zawartość w edytorze tekstu to używamy przycisku `Wyślij`.
+5. Klikamy `załaduj`, jeśli zobaczymy zawartość w edytorze tekstu to używamy przycisku `Wyślij`.
 
     ![db publikacja](docs/style_2.png)
     
-6. Powyższe czynności powtarzamy dla pliku `sld/road.sld` i ustawiamy wartość `Nazwa` jako road.    
+6. Powyższe czynności powtarzamy dla pliku `sld/road.sld` i ustawiamy wartość `Nazwa` jako **road**.    
 
 #### Publikacja zawartości bazy danych
 
@@ -184,7 +194,7 @@ W celu publikacji zawartości bazy danych należy wystawić warstwę:
 
 1. Wybieramy `Warstwy` z menu.
 2. Następnie używamy przycisku `Dodaj nowy zasób`.
-3. Z listy rozwijanej wybieramy uprzednio utworzoną przechowlanie (store).
+3. Z listy rozwijanej wybieramy uprzednio utworzoną przechowalanie (store).
 4. Klikamy w `Publish` przy wybranej przez nas nazwie tabeli.
 
     ![db publikacja_data_store](docs/layers_2.png)
@@ -194,8 +204,8 @@ jest pole `Nazwa`, ponieważ będziemy ją później traktować jako identyfikat
 
     ![db publikacja_edit_layer](docs/layers_3.png)
 
-6. Przechodzimy do forumularza `Granice` i klikamy kolejno `Obliczyć na podstawie danych`, jeśli tabela posiada dane lub 
-`Compute from SRS bounds`, jeśli takowych danych nie ma. Następnie klikamy w `Oblicz na podstawie natywnych granic`:
+6. Przechodzimy do forumularza `Granice` i klikamy kolejno `Obliczyć na podstawie danych`, jeśli tabela posiada dane i są one 
+ niezmienne lub `Compute from SRS bounds`, jeśli dane w tabeli ulegną przyrostowi w czasie. Następnie klikamy w `Oblicz na podstawie natywnych granic`:
     
     ![db publikacja_granice](docs/layers_4.png) 
     
@@ -209,11 +219,11 @@ jako wybrany styl, ponieważ nasza tabela zawiera wielokąty.
     ![db publikacja_granice](docs/layers_6.png) 
 
 9. Powyższe kroki powtarzamy dla zasobu tabeli `road`. Zmieniami tylko zawartość pola `Nazwa` na `road` oraz w zakładce `Publishing` 
-w formularzy `WMS Settings` wybieramy opcję `polsl:road`. 
+w formularzy `WMS Settings` wybieramy opcję `polsl:road`.
 
 ### Podgląd warstwy
 
-W celu podglądu warstwy i przy okazji weryfikacji czy działa poprawnie należy podjąć następujące kroki:
+W celu podglądu warstwy i przy okazji weryfikacji czy dane są poprawnie wyświetlane, należy podjąć następujące kroki:
 1. Wybrać z menu `Podgląd warstw`.
 2. Znaleźć w tabeli interesującą nas warstwę i kliknąć przycisk `OpenLayers` w kolumnie `Typowe formaty`.
 
@@ -223,5 +233,5 @@ Cześć kliencka (aplikacja webowa) oraz serwerowa wymagają do uruchomienia `no
 ze strony [https://nodejs.org/en/](https://nodejs.org/en/). Wybieramy wersję z dopiskiem LTS i instalujemy z domyślnymi
 ustawieniami.
 
-Szczegóły uruchamiania aplikacji klienckiej znajdują się w pliku `client/README.md`.
+Szczegóły uruchamiania aplikacji klienckiej znajdują się w pliku `client/README.md`. <br />
 Szczegóły uruchamiania aplikacji serwerowej znajdują się w pliku `backend/README.md`.

@@ -26,7 +26,7 @@ create table road
     id          SERIAL primary key,
     name        varchar(256)                           not null,
     description varchar(1024),
-    category    text check (category in ('highway', 'ekspresowa', 'glowna', 'zbiorcza', 'lokalna',
+    category    text check (category in ('autostrada', 'ekspresowa', 'glowna', 'zbiorcza', 'lokalna',
                                          'dojazdowa')) not null,
     length      NUMERIC(6, 2) default 0.0,
     geom        geometry(LineString, 2180)             not null

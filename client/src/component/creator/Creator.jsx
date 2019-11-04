@@ -126,7 +126,11 @@ export function Creator({map}) {
 
             const layerToUpdate = map.getLayers().getArray().find(l => l.get('type') === formValues['type']);
             if (layerToUpdate) {
-                layerToUpdate.getSource().updateParams({'REVISION': new Date().toISOString()});
+                if (layerToUpdate.getSource() instanceof VectorSource) {
+                    layerToUpdate.getSource().refresh();
+                } else {
+                    layerToUpdate.getSource().updateParams({'REVISION': new Date().toISOString()});
+                }
             }
 
             clearForm();

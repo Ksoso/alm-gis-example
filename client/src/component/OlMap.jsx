@@ -12,6 +12,12 @@ import WMTSCapabilities from "ol/format/WMTSCapabilities";
 import WMTS, {optionsFromCapabilities} from "ol/source/WMTS";
 import TileWMS from "ol/source/TileWMS";
 import WMSServerType from "ol/source/WMSServerType";
+import VectorSource from "ol/source/Vector";
+import {bbox} from "ol/loadingstrategy";
+import VectorImageLayer from "ol/layer/VectorImage";
+import Feature from "ol/Feature";
+import WKT from "ol/format/WKT";
+import {StyleFactory} from "../utils/StyleFactory";
 
 const useStyles = makeStyles({
     root: {
@@ -24,6 +30,7 @@ const useStyles = makeStyles({
     },
 });
 
+const wktFormat = new WKT();
 
 const BASE_EXTENT = [144907.1658, 140544.7241, 877004.0070, 910679.6817];
 proj4.defs('EPSG:2180', "+proj=tmerc +lat_0=0 +lon_0=19 +k=0.9993 +x_0=500000 +y_0=-5300000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +axis=neu");
@@ -103,10 +110,58 @@ const createOpenLayersMap = async (htmlContainer) => {
         layerList: true,
     });
 
+    const poiVectorSource = new VectorSource({
+        loader: async (extent) => {
+            const url = new URL('http://localhost:3002/poi/bbox'),
+                params = {xmin: extent[0], ymin: extent[1], xmax: extent[2], ymax: extent[3]};
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+            const response = await fetch(url);
+            const poiResponse = await response.json();
+            poiVectorSource.addFeatures(poiResponse.map(poi => new Feature({
+                geometry: wktFormat.readGeometry(poi.st_astext),
+                name: poi.name,
+                description: poi.description,
+                category: poi.category
+            })));
+        },
+        strategy: bbox
+    });
+
+    const poiVectorLayer = new VectorImageLayer({
+        imageRatio: 2,
+        source: poiVectorSource,
+        style: (feature) => {
+            const category = feature.get('category');
+
+            switch (category) {
+                case 'hotel':
+                    return StyleFactory.hotelIcon;
+                case 'zamek':
+                    return StyleFactory.castleIcon;
+                case 'pomnik':
+                    return StyleFactory.monumentIcon;
+                case 'szpital':
+                    return StyleFactory.hospitalIcon;
+                case 'restauracja':
+                    return StyleFactory.restaurantIcon;
+                case 'muzeum':
+                    return StyleFactory.museumIcon;
+                default:
+                    return StyleFactory.poiIcon;
+            }
+        }
+    });
+
+    poiVectorLayer.setProperties({
+        name: 'Punkty zainteresowania',
+        type: 'poi',
+        layerList: true,
+    });
 
     return new Map({
         target: htmlContainer,
-        layers: [ortoWMTS, bdoWMTS, buildingsWMS, roadsWMS],
+        layers: [ortoWMTS, bdoWMTS, buildingsWMS, roadsWMS, poiVectorLayer],
         view: new View({
             center: [506717.070973, 264450.406505],
             projection: EPSG2180,

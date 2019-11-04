@@ -18,6 +18,7 @@ app.get('/', (request, response) => {
 app.get('/building', db.getBuildings);
 app.post('/building', db.createBuilding);
 app.post('/road', db.createRoad);
-app.post('/poi', db.createPoi);
+app.post('/poi', db.createPoI);
+app.get('/poi/bbox', db.getPoIByBBox);
 
 module.exports = app;

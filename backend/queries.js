@@ -39,7 +39,7 @@ const createBuilding = async (request, response, next) => {
     const {name, description, geometry} = request.body;
     const query = `INSERT INTO building(name, description, geom)
                    VALUES ($1, $2, ST_GeomFromText($3, 2180))
-                          RETURNING id`;
+                   RETURNING id`;
     try {
         await tx(async client => {
             const res = await client.query(query, [name, description, geometry]);
@@ -54,7 +54,7 @@ const createRoad = async (request, response, next) => {
     const {name, description, category, length, geometry} = request.body;
     const query = `INSERT INTO road(name, description, category, length, geom)
                    VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 2180))
-                          RETURNING id`;
+                   RETURNING id`;
     try {
         await tx(async client => {
             const res = await client.query(query, [name, description, category, parseFloat(length), geometry]);
@@ -65,11 +65,11 @@ const createRoad = async (request, response, next) => {
     }
 };
 
-const createPoi = async (request, response, next) => {
+const createPoI = async (request, response, next) => {
     const {name, description, category, geometry} = request.body;
     const query = `INSERT INTO poi(name, description, category, geom)
                    VALUES ($1, $2, $3, ST_GeomFromText($4, 2180))
-                          RETURNING id`;
+                   RETURNING id`;
     try {
         await tx(async client => {
             const res = await client.query(query, [name, description, category, geometry]);
@@ -80,9 +80,23 @@ const createPoi = async (request, response, next) => {
     }
 };
 
+const getPoIByBBox = async (request, response, next) => {
+    const {xmin, ymin, xmax, ymax} = request.query;
+    //xmin, ymin, xmax, ymax
+    const query = 'SELECT id, name, description, category, ST_AsText(geom) FROM poi WHERE geom && ST_MakeEnvelope($1, $2, $3, $4)';
+
+    try {
+        const res = await pool.query(query, [xmin, ymin, xmax, ymax]);
+        response.status(200).json(res.rows);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getBuildings,
     createBuilding,
     createRoad,
-    createPoi
+    createPoI,
+    getPoIByBBox
 };
