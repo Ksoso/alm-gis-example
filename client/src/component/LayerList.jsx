@@ -9,7 +9,7 @@ import {ListItemText, makeStyles} from "@material-ui/core";
 const useStyles = makeStyles({
     root: {
         position: 'absolute',
-        top: '70px',
+        top: '.5em',
         left: '.5em',
         width: '280px'
     }
