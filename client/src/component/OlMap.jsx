@@ -1,20 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
 import {makeStyles} from '@material-ui/core/styles'
-import Map from 'ol/Map';
-import View from 'ol/View';
-import {Creator} from "./creator/Creator";
-import {LayerList} from "./LayerList";
 import {register} from "ol/proj/proj4";
-import {get} from 'ol/proj';
 import proj4 from 'proj4';
-import VectorSource from "ol/source/Vector";
-import {bbox} from "ol/loadingstrategy";
-import VectorImageLayer from "ol/layer/VectorImage";
-import Feature from "ol/Feature";
 import WKT from "ol/format/WKT";
-import {StyleFactory} from "../utils/StyleFactory";
-import {LayerUtils} from "../utils/LayerUtils";
-import Cluster from "ol/source/Cluster";
 
 const wktFormat = new WKT();
 const BASE_EXTENT = [144907.1658, 140544.7241, 877004.0070, 910679.6817];
@@ -40,111 +28,20 @@ const useStyles = makeStyles({
 });
 
 async function createOpenLayersMap(htmlContainer) {
-    const EPSG2180 = get('EPSG:2180');
-    EPSG2180.setExtent(BASE_EXTENT);
-
-    const ortoWMTS = await LayerUtils.createWMTS('https://mapy.geoportal.gov.pl/wss/service/WMTS/guest/wmts/ORTO', {
-        layer: 'ORTOFOTOMAPA',
-        projection: 'EPSG:2180',
-        matrixSet: 'EPSG:2180',
-    }, {
-        name: 'Ortofotomapa',
-        layerList: true,
-    }, false);
-
-    const bdoWMTS = await LayerUtils.createWMTS('https://mapy.geoportal.gov.pl/wss/service/WMTS/guest/wmts/G2_MOBILE_500', {
-        layer: 'G2_MOBILE_500',
-        projection: 'EPSG:2180',
-        matrixSet: 'EPSG:2180',
-    }, {
-        name: 'Mapa podkładowa BDOO i BDOT10k',
-        layerList: true,
-    }, true);
-
-    const buildingsWMS = LayerUtils.createWMS('http://localhost:8080/geoserver/polsl_gis/wms', {
-        format: "image/png8",
-        tiled: true,
-        layers: 'polsl_gis:building'
-    }, {
-        name: 'Budynki',
-        type: 'building',
-        layerList: true,
-    });
-
-    const roadsWMS = LayerUtils.createWMS('http://localhost:8080/geoserver/polsl_gis/wms', {
-        format: "image/png8",
-        tiled: true,
-        layers: 'polsl_gis:road'
-    }, {
-        name: 'Drogi',
-        type: 'road',
-        layerList: true,
-    });
-
-    const poiVectorSource = new VectorSource({
-        loader: async function (extent) {
-            const url = new URL('http://localhost:3002/poi/bbox'),
-                params = {xmin: extent[0], ymin: extent[1], xmax: extent[2], ymax: extent[3]};
-            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-
-            try {
-                const response = await fetch(url);
-                const poiResponse = await response.json();
-                this.addFeatures(poiResponse.map(poi => {
-                    const ft = new Feature({
-                        geometry: wktFormat.readGeometry(poi.st_astext),
-                        name: poi.name,
-                        description: poi.description,
-                        category: poi.category
-                    });
-
-                    ft.setId(poi.id);
-
-                    return ft;
-                }));
-            } catch (e) {
-                this.removeLoadedExtent(extent);
-            }
-        },
-        strategy: bbox
-    });
-
-    const poiCluster = new Cluster({
-        source: poiVectorSource,
-    });
-
-    const poiVectorLayer = new VectorImageLayer({
-        source: poiCluster,
-        style: StyleFactory.poiStyleCluster
-    });
-
-    poiVectorLayer.setProperties({
-        name: 'Punkty zainteresowania',
-        type: 'poi',
-        layerList: true,
-    });
-
-    return new Map({
-        target: htmlContainer,
-        layers: [ortoWMTS, bdoWMTS, buildingsWMS, roadsWMS, poiVectorLayer],
-        view: new View({
-            center: [506717.070973, 264450.406505],
-            projection: EPSG2180,
-            zoom: 8,
-        })
-    });
+    //Tworzy instancje mapy
 }
 
 export const OlMap = () => {
     const classes = useStyles();
+    //mapContainer.current zawiera aktualny element HTML podpięty pod REF
     const mapContainer = useRef(null);
 
     const [map, setMap] = useState(null);
+    //Funkcja przekazana do useEffect nie może być asynchroniczna
     useEffect(() => {
         if (!map) {
             async function createMap() {
-                const newMap = await createOpenLayersMap(mapContainer.current);
-                setMap(newMap);
+                //Tworzenie mapy i ustawianie stanu
             }
 
             createMap();
@@ -153,8 +50,9 @@ export const OlMap = () => {
 
     return (
         <div id={'map-visualization'} className={classes.root} ref={mapContainer}>
-            {map && <LayerList map={map}/>}
-            {map && <Creator map={map}/>}
+            <h1>Tutaj będzie mapa</h1>
+            {/*{map && <LayerList map={map}/>}*/}
+            {/*{map && <Creator map={map}/>}*/}
         </div>
     )
 };

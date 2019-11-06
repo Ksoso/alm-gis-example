@@ -15,7 +15,6 @@ app.get('/', (request, response) => {
     response.json({ info: 'Node.js, Express, and Postgres API' })
 });
 
-app.get('/building', db.getBuildings);
 app.post('/building', db.createBuilding);
 app.post('/road', db.createRoad);
 app.post('/poi', db.createPoI);
