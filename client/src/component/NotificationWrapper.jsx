@@ -18,7 +18,7 @@ const variantIcon = {
     info: InfoIcon,
 };
 
-const useStyles1 = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     success: {
         backgroundColor: green[600],
     },
@@ -45,7 +45,7 @@ const useStyles1 = makeStyles(theme => ({
 }));
 
 export function NotificationContentWrapper(props) {
-    const classes = useStyles1();
+    const classes = useStyles();
     const {className, message, onClose, variant, ...other} = props;
     const Icon = variantIcon[variant];
 
@@ -55,14 +55,14 @@ export function NotificationContentWrapper(props) {
             aria-describedby="client-snackbar"
             message={
                 <span id="client-snackbar" className={classes.message}>
-          <Icon className={clsx(classes.icon, classes.iconVariant)}/>
+                    <Icon className={clsx(classes.icon, classes.iconVariant)}/>
                     {message}
-        </span>
+                </span>
             }
             action={[
-                <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
+                onClose ? <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
                     <CloseIcon className={classes.icon}/>
-                </IconButton>,
+                </IconButton> : null,
             ]}
             {...other}
         />

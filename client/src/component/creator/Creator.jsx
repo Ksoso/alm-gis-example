@@ -2,12 +2,17 @@ import React, {useEffect, useState} from "react"
 import PropTypes from 'prop-types'
 import {makeStyles} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
+import Draw from 'ol/interaction/Draw';
+import {Vector as VectorLayer} from 'ol/layer';
+import {Vector as VectorSource} from 'ol/source';
 import WKT from "ol/format/WKT";
 import {unByKey} from "ol/Observable";
 import {DEFAULT_VALUE, objectConfig} from "./objectConfig";
 import {NotificationContentWrapper} from "../NotificationWrapper";
 import Snackbar from "@material-ui/core/Snackbar";
 import CreatorForm from "./CreatorForm";
+import {LayerUtils} from "../../utils/LayerUtils";
+import GeometryPreview from "./GeometryPreview";
 
 const useStyles = makeStyles({
     root: {
@@ -27,6 +32,13 @@ const emptyDrawingState = {
     drawingLayer: null
 };
 
+/**
+ * Tworzy interakcję rysowania na podstawie typu
+ *
+ * @param {string} type typ geometrii, która ma być rysowana
+ * @return {{interaction: *, drawingLayer: *}} obiekt zawierający interakcję oraz warstwę wektorową, na
+ * której dana interakcja ma operować
+ */
 function createDrawInteraction(type) {
     //Tworzymy interakcje rysowania na podstawie typu
 }
@@ -46,8 +58,10 @@ export function Creator({map}) {
             map.addInteraction(interaction);
 
             drawEndListenerKey = interaction.on('drawend', (evt) => {
-                setGeometry(wktFormat.writeFeature(evt.feature));
-                interaction.setActive(false);
+                setGeometry(evt.feature.getGeometry());
+                setTimeout(() => {
+                    interaction.setActive(false);
+                }, 200);
             });
         }
 
@@ -100,30 +114,49 @@ export function Creator({map}) {
         setNotification({...notification, open: false});
     };
 
-    return (
-        <div className={classes.root}>
-            <Paper>
-                <CreatorForm formValues={formValues} onCancel={handleCancelClick}
-                             onFormSubmit={handleAddObjectSubmit} onFormValueChange={handleFormValueChange}
-                             onObjectTypeChange={handleObjectTypeChange} geometry={geometry}/>
-            </Paper>
+    const isDrawing = formValues['type'] !== DEFAULT_VALUE;
 
-            <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                open={notification.open}
-                autoHideDuration={6000}
-                onClose={handleNotificationClose}
-            >
-                <NotificationContentWrapper
+    return (
+        <React.Fragment>
+            <div className={classes.root}>
+                <Paper>
+                    <CreatorForm formValues={formValues} onCancel={handleCancelClick}
+                                 onFormSubmit={handleAddObjectSubmit} onFormValueChange={handleFormValueChange}
+                                 onObjectTypeChange={handleObjectTypeChange} geometry={geometry}/>
+                </Paper>
+
+                {!geometry && isDrawing && <Snackbar
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                    open={true}
+                >
+                    <NotificationContentWrapper
+                        variant={'warning'}
+                        message={'Proszę o wyrysowanie geometrii, w celu kontunowania zapisu'}
+                    />
+                </Snackbar>}
+
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                    }}
+                    open={notification.open}
+                    autoHideDuration={6000}
                     onClose={handleNotificationClose}
-                    variant={notification.variant}
-                    message={notification.msg}
-                />
-            </Snackbar>
-        </div>
+                >
+                    <NotificationContentWrapper
+                        onClose={handleNotificationClose}
+                        variant={notification.variant}
+                        message={notification.msg}
+                    />
+                </Snackbar>
+
+            </div>
+            <GeometryPreview geometry={geometry}/>
+        </React.Fragment>
     )
 }
 

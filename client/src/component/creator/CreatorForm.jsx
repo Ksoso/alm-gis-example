@@ -37,16 +37,6 @@ export default function CreatorForm({formValues, geometry, onObjectTypeChange, o
             return <FormField key={key} value={formValues[key]} fieldDef={value} fieldId={key}
                               onValueChange={onFormValueChange}/>
         });
-
-        //geometry field
-        fields.push(
-            <TextField required={true} key={'geometry'} className={classes.textField} label={'Geometria'}
-                       name={'geometry'} id={'geometry'} onChange={onFormValueChange} error={!geometry}
-                       helperText={!geometry ? 'Pole Geometria jest wymagane' : ''}
-                       margin={"normal"} value={geometry || ''} multiline={true} rowsMax={'4'} rows={'3'}
-                       InputProps={{readOnly: true}}>
-            </TextField>
-        );
     }
 
     return (<form className={classes.root} noValidate autoComplete="off" onSubmit={onFormSubmit}>
@@ -74,9 +64,9 @@ CreatorForm.propTypes = {
      */
     formValues: PropTypes.object.isRequired,
     /**
-     * Wartość geoemtrii w formacie WKT
+     * Geometria w formacie OpenLayers
      */
-    geometry: PropTypes.string,
+    geometry: PropTypes.object,
     /**
      * Funkcja zostanie uruchomienia po zmianie typu obiektu
      */
