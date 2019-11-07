@@ -23,10 +23,10 @@ export const LayerUtils = {
      * @param {string} appOptions.name nazwa warstwy wyświetlana w komponencie listy warstw
      * @param {boolean} appOptions.layerList jeśli <code>true</code> warstawa zostanie dodana do komponenetu listy warstw
      * @param {string=} appOptions.type nazwa typu, który odpowiada identyfikatorowi typu, który można dodawać z poziomu aplikacji
-     * @param {boolean} visible jeśli <code>true</code> warstwa będzie domyślnie widoczna
+     * @param {boolean=} appOptions.visible jeśli <code>true</code> warstwa będzie domyślnie widoczna
      * @return {Promise<TileLayer>} instancję warstwy WMTS
      */
-    createWMTS: async (url, wmtsParams, appOptions, visible) => {
+    createWMTS: async (url, wmtsParams, appOptions) => {
         const parser = new WMTSCapabilities();
         const response = await fetch(`${url}?SERVICE=WMTS&request=GetCapabilities`);
         const capabilities = await response.text();
@@ -35,7 +35,6 @@ export const LayerUtils = {
 
         const tileLayer = new TileLayer({
             source: new WMTS(optFromCapabilities),
-            visible
         });
 
         tileLayer.setProperties(appOptions, true);
@@ -43,9 +42,9 @@ export const LayerUtils = {
     },
 
     /**
-     * Tworzy warstwę WMS
+     * Tworzy warstwę WMS (Web Map Service)
      *
-     * @param url url adres internetowy źródła
+     * @param {string} url adres internetowy źródła
      * @param {object} wmsParams parametry usługi WMS
      * @param {string} wmsParams.layers identyfikator warstw do załadowania
      * @param {format=} wmsParams.format format zdjęcia, jaki ma być pobierany np: "image/png"
@@ -67,6 +66,17 @@ export const LayerUtils = {
         return tileLayer;
     },
 
+    /**
+     * Tworzy warstwę typu WFS (Web Feature Service
+     *
+     * @param {string} url adres internetowy źródła
+     * @param {object} wfsParams parametry serwisu WFS
+     * @param {object} appOptions dodatkowe parametry wymagane przez aplikację
+     * @param {string} appOptions.name nazwa warstwy wyświetlana w komponencie listy warstw
+     * @param {boolean} appOptions.layerList jeśli <code>true</code> warstawa zostanie dodana do komponenetu listy warstw
+     * @param {string=} appOptions.type nazwa typu, który odpowiada identyfikatorowi typu, który można dodawać z poziomu aplikacji
+     * @return {VectorImageLayer}
+     */
     createWFS: (url, wfsParams, appOptions) => {
         const wfsLayerSource = new VectorSource({
                 format: new GeoJSON(),
@@ -74,18 +84,17 @@ export const LayerUtils = {
                 &request=GetFeature&typename=${wfsParams.typeName}\
                 &outputFormat=application/json\
                 &srsname=${wfsParams.projection}\
-                &bbox=${extent.join(',')},${wfsParams.projection}'
-                `,
+                &bbox=${extent.join(',')},${wfsParams.projection}`,
                 strategy: bbox
             }
         );
 
         const wfsLayer = new VectorImageLayer({
             source: wfsLayerSource,
-            style: wfsParams.style
+            style: wfsParams.style,
         });
 
-        wfsLayer.setProperties(appOptions);
+        wfsLayer.setProperties(appOptions, true);
         return wfsLayer;
     },
 

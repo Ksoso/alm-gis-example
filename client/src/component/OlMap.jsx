@@ -59,7 +59,8 @@ async function createOpenLayersMap(htmlContainer) {
     }, {
         name: 'Ortofotomapa',
         layerList: true,
-    }, false);
+        visible: false
+    });
 
     const bdoWMTS = await LayerUtils.createWMTS('https://mapy.geoportal.gov.pl/wss/service/WMTS/guest/wmts/G2_MOBILE_500', {
         layer: 'G2_MOBILE_500',
@@ -68,12 +69,14 @@ async function createOpenLayersMap(htmlContainer) {
     }, {
         name: 'Mapa podkładowa BDOO i BDOT10k',
         layerList: true,
-    }, true);
+        visible: true
+    });
 
     const buildingsWMS = LayerUtils.createWMS('http://localhost:8080/geoserver/polsl_gis/wms', {
         format: "image/png8",
         tiled: true,
-        layers: 'polsl_gis:building'
+        layers: 'polsl_gis:building',
+        tilesOrigin: `${BASE_EXTENT[0]},${BASE_EXTENT[1]}`
     }, {
         name: 'Budynki',
         type: 'building',
@@ -133,9 +136,20 @@ async function createOpenLayersMap(htmlContainer) {
         layerList: true,
     });
 
+    const wfsPoi = LayerUtils.createWFS('http://localhost:8080/geoserver/polsl_gis/wfs',
+        {
+            typeName: 'polsl_gis:poi',
+            projection: 'EPSG:2180',
+            style: StyleFactory.poiStyle
+        }, {
+            name: 'Punkty zainteresowania (WFS)',
+            layerList: true,
+            visible: false
+        });
+
     return new Map({
         target: htmlContainer,
-        layers: [ortoWMTS, bdoWMTS, buildingsWMS, roadsWMS, poiVectorLayer],
+        layers: [ortoWMTS, bdoWMTS, buildingsWMS, roadsWMS, poiVectorLayer, wfsPoi],
         view: new View({
             center: [506717.070973, 264450.406505],
             projection: EPSG2180,
